@@ -1,0 +1,21 @@
+#cloud-config
+package_upgrade: ${UPGRADE}
+package_reboot_if_required: ${REBOOT}
+timezone: ${TIMEZONE}
+
+%{ if WRITE_FILES ~}
+write_files:
+  %{~ for item in WRITE_INSTRUCTIONS ~}
+  - path: ${item["path"]}
+    permissions: ${item["permissions"]}
+    content: |
+      ${indent(6, item["content"])}
+  %{~ endfor ~}
+%{~ endif ~}
+
+%{~ if RUN_CMDS ~}
+runcmd:
+  %{~ for cmd in CMDS ~}
+  - ${cmd}
+  %{~ endfor ~}
+%{~ endif ~}
