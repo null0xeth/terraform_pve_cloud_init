@@ -26,9 +26,7 @@ No modules.
 
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
-| <a name="input_cloud-init"></a> [cloud-init](#input\_cloud-init) | n/a | `any` | n/a | yes |
-| <a name="input_provider_aws"></a> [provider\_aws](#input\_provider\_aws) | n/a | `any` | n/a | yes |
-| <a name="input_provider_proxmox"></a> [provider\_proxmox](#input\_provider\_proxmox) | n/a | `any` | n/a | yes |
+| <a name="input_cloud-init"></a> [cloud-init](#input\_cloud-init) | Configuration variables used to create the cloud-init.yml file | <pre>object({<br>    datastore = optional(string, "local")<br><br>    general = optional(object({<br>      target_os = optional(string, "centos")<br>      filename  = optional(string, "cloud-init.yaml")<br>      timezone  = optional(string, "Your/Tz")<br>      upgrade   = optional(bool, true)<br>      reboot    = optional(bool, true)<br>    }))<br><br>    network = optional(object({<br>      include  = optional(bool)<br>      networks = optional(number)<br>      dhcp4    = optional(bool)<br>    }))<br><br>    files = optional(object({<br>      enable = optional(bool, true)<br>      spec = optional(list(object({<br>        path        = optional(string)<br>        permissions = optional(string)<br>        content     = optional(any)<br>      })))<br>    }))<br><br>    commands = optional(object({<br>      enable        = optional(bool, true)<br>      use_default   = optional(bool, true)<br>      cmds_override = optional(list(string))<br>    }))<br>  })</pre> | n/a | yes |
 
 ## Outputs
 
