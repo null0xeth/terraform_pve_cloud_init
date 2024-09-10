@@ -1,75 +1,5 @@
-terraform {
-  required_providers {
-    aws = {
-      source  = "hashicorp/aws"
-      version = "~> 5.64.0"
-    }
-    proxmox = {
-      source  = "bpg/proxmox"
-      version = ">=0.62.0"
-    }
-  }
-}
-
-variable "cloud-init" {
-  description = "Configuration variables used to create the cloud-init.yml file"
-  type = object({
-    datastore = optional(string, "local")
-
-    general = optional(object({
-      target_os = optional(string, "centos")
-      filename  = optional(string, "cloud-init.yaml")
-      timezone  = optional(string, "Your/Tz")
-      upgrade   = optional(bool, true)
-      reboot    = optional(bool, true)
-    }))
-
-    network = optional(object({
-      include  = optional(bool)
-      networks = optional(number)
-      dhcp4    = optional(bool)
-    }))
-
-    files = optional(object({
-      enable = optional(bool, true)
-      spec = optional(list(object({
-        path        = optional(string)
-        permissions = optional(string)
-        content     = optional(any)
-      })))
-    }))
-
-    commands = optional(object({
-      enable        = optional(bool, true)
-      use_default   = optional(bool, true)
-      cmds_override = optional(list(string))
-    }))
-  })
-}
-
 locals {
-  /* datastore = "local" */
   data_type = "snippets"
-
-  # general = {
-  #   upgrade     = true
-  #   reboot      = true
-  #   run_cmds    = true
-  #   write_files = false
-  # }
-
-  # files = {
-  #   network = [
-  #     {
-  #       path        = "/etc/cloud/cloud.cfg.d/99-custom-networking.cfg"
-  #       permissions = "0644"
-  #       content     = <<-EOT
-  #         network: {config: disabled}
-  #       EOT
-  #     },
-  #   ]
-  # }
-
   defaults = {
     ubuntu = [
       "apt install qemu-guest-agent -y",
@@ -89,6 +19,20 @@ locals {
     ]
   }
 }
+
+terraform {
+  required_providers {
+    aws = {
+      source  = "hashicorp/aws"
+      version = "~> 5.64.0"
+    }
+    proxmox = {
+      source  = "bpg/proxmox"
+      version = ">=0.62.0"
+    }
+  }
+}
+
 
 resource "proxmox_virtual_environment_file" "cloud_config" {
   content_type = "snippets"
